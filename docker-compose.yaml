@@ -1,3 +1,4 @@
+
 # Use postgres/example user/password credentials
 version: '3.8'
 
@@ -7,8 +8,8 @@ volumes:
 networks:
   stack:
     name: stack
-    external: false
-
+    external: false  # Ensure that stack network is defined as internal
+    
 services:
   database:
     container_name: database
@@ -16,6 +17,7 @@ services:
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
+    env_file: .env
     networks:
       - stack
 
@@ -33,12 +35,16 @@ services:
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
-      network: stack
+      network: stack  # Correct this to networks if there is only one network
     restart: always
     networks:
       - stack
     ports:
-      - 3000:3000
+      - "3000:3000"
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DATABASE_DIRECT_URL=${DATABASE_URL}
     depends_on:
       - database
 
@@ -49,7 +55,8 @@ services:
     networks:
       - stack
     ports:
-      - 5555:5555
+      - "5555:5555"
+    env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
       - DATABASE_DIRECT_URL=${DATABASE_URL}
