@@ -4,11 +4,6 @@ version: '3.8'
 
 volumes:
   database-data:
-
-networks:
-  stack:
-    name: stack
-    external: false  # Ensure that stack network is defined as internal
     
 services:
   database:
@@ -18,8 +13,6 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data/
     env_file: .env
-    networks:
-      - stack
 
   calcom:
     image: calcom.docker.scarf.sh/calcom/cal.com
@@ -37,8 +30,6 @@ services:
         DATABASE_DIRECT_URL: ${DATABASE_URL}
       network: stack  # Correct this to networks if there is only one network
     restart: always
-    networks:
-      - stack
     ports:
       - "3000:3000"
     env_file: .env
@@ -52,8 +43,6 @@ services:
   studio:
     image: calcom.docker.scarf.sh/calcom/cal.com
     restart: always
-    networks:
-      - stack
     ports:
       - "5555:5555"
     env_file: .env
