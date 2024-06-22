@@ -28,7 +28,6 @@ services:
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
-      network: stack  # Correct this to networks if there is only one network
     restart: always
     ports:
       - "3000:3000"
